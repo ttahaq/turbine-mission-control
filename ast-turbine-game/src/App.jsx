@@ -71,17 +71,18 @@ function App() {
       const results = calculateStats()
       setSimulationStats(results)
 
-      if (results.efficiency > 85 && results.cost < 7000) {
-        setTestResult({ status: 'success' })
+      // UNWINNABLE LOGIC: Always Fail
+      let reason = ''
+      
+      if (results.cost > 4000) {
+        reason = 'PROJECT REJECTED: Budget Overrun. The Finance department failed to control costs.'
+      } else if (angle !== 34) {
+        reason = 'PROJECT REJECTED: Power Output Unstable. The Engineering Angle calculation was off.'
       } else {
-        let reason = 'Unknown Error'
-        if (results.efficiency <= 85) {
-          reason = `Efficiency too low: ${results.efficiency}%`
-        } else if (results.cost >= 7000) {
-          reason = `Budget exceeded by $${(results.cost - 7000).toLocaleString()}`
-        }
-        setTestResult({ status: 'failure', reason })
+        reason = 'CRITICAL FAILURE: Unexpected debris blockage. Radius Ratio was not resilient enough.'
       }
+
+      setTestResult({ status: 'failure', reason })
     }, duration)
   }
 
@@ -115,30 +116,25 @@ function App() {
         {/* Result Modal */}
         {testResult && (
           <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in">
-            <div className={`max-w-4xl w-full p-12 border-4 text-center ${
-              testResult.status === 'failure' ? 'border-red-500 bg-red-900/20' : 'border-green-500 bg-green-900/20'
-            }`}>
-              <h2 className={`text-6xl md:text-8xl font-black mb-8 tracking-tighter ${
-                testResult.status === 'failure' ? 'text-red-500 animate-pulse' : 'text-green-400'
-              }`}>
-                {testResult.status === 'failure' ? 'CRITICAL FAILURE' : 'MISSION SUCCESS'}
+            <div className="max-w-5xl w-full p-12 border-4 border-red-600 bg-red-950/90 text-center shadow-[0_0_100px_rgba(220,38,38,0.5)]">
+              <h2 className="text-7xl md:text-9xl font-black mb-8 tracking-tighter text-red-500 animate-pulse">
+                MISSION FAILED
               </h2>
-              <p className={`text-2xl md:text-4xl font-bold mb-12 ${
-                testResult.status === 'failure' ? 'text-red-300' : 'text-green-300'
-              }`}>
-                {testResult.status === 'failure' 
-                  ? `⚠️ ${testResult.reason} ⚠️` 
-                  : 'SYSTEM STABLE. OUTPUT NOMINAL.'}
-              </p>
+              
+              <div className="bg-black/40 p-8 rounded-xl border border-red-500/30 mb-12">
+                <p className="text-3xl md:text-5xl font-bold text-red-200 mb-6 leading-tight">
+                  {testResult.reason}
+                </p>
+                <p className="text-xl md:text-2xl text-red-400 uppercase tracking-[0.2em] font-bold animate-bounce">
+                  Sabotage Detected or Incompetence? Who is responsible?
+                </p>
+              </div>
+
               <button 
                 onClick={() => setTestResult(null)}
-                className={`px-12 py-6 text-2xl font-bold border-2 transition-all hover:scale-105 ${
-                  testResult.status === 'failure' 
-                    ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-black' 
-                    : 'border-green-500 text-green-500 hover:bg-green-500 hover:text-black'
-                }`}
+                className="px-16 py-6 text-3xl font-black border-4 border-red-500 text-red-500 hover:bg-red-600 hover:text-white transition-all hover:scale-105 uppercase tracking-widest"
               >
-                ACKNOWLEDGE
+                BEGIN DEBRIEF
               </button>
             </div>
           </div>
