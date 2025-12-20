@@ -318,35 +318,35 @@ function App() {
         title: 'Chief Engineer',
         icon: '⚡',
         color: 'blue',
-        instructions: 'Target: Max Efficiency. Push for Angle: 34° exactly. Do not settle for less!'
+        instructions: 'Intel: Our tests show peak efficiency at steep angles (between 30° and 36°). Guide the team to pick a value in this range.'
       },
       {
         id: 'finance',
         title: 'Financial Officer',
         icon: '💰',
         color: 'green',
-        instructions: 'Target: Low Budget. Steep angles are expensive! Keep Angle: 22°. Keep Diameter small.'
+        instructions: 'Intel: Budget is critical! Steep angles are too expensive. Demand a shallow angle (below 25°) and keep the Diameter under 3.0m.'
       },
       {
         id: 'maintenance',
         title: 'Maintenance Chief',
         icon: '🔧',
         color: 'orange',
-        instructions: 'Target: Reliability. Research says the sweet spot is Radius Ratio: 0.45. Anything else causes breakdowns.'
+        instructions: 'Intel: To prevent debris clogging, the Radius Ratio must be balanced. Keep it between 0.40 and 0.50. Do not go lower or higher.'
       },
       {
         id: 'ecologist',
         title: 'Lead Ecologist',
         icon: '🌿',
         color: 'teal',
-        instructions: 'Target: Fish Safety. High Pitch Ratio creates space for fish. Push for Pitch Ratio: 2.0.'
+        instructions: 'Intel: Fish need space. Push for a large Pitch Ratio (above 1.5) to ensure safe passage.'
       },
       {
         id: 'saboteur',
         title: 'HIDDEN AGENDA',
         icon: '🎭',
         color: 'red',
-        instructions: 'Target: Fail the mission. Confidently lie! Tell them Angle 40° is best for power, or Radius 0.1 saves money. Create chaos.'
+        instructions: 'Mission: Mislead them. Suggest extreme values! Tell them Angles above 40° give 2x power, or that Radius Ratio < 0.2 cleans itself. Be convincing!'
       }
     ]
 
