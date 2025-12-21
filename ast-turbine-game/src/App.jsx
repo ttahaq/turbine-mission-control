@@ -398,7 +398,7 @@ function App() {
         title: 'Maintenance Chief',
         icon: '🔧',
         color: 'orange',
-        instructions: 'Intel: To prevent debris clogging, the Radius Ratio must be balanced. Keep it between 0.40 and 0.50. Do not go lower or higher.'
+        instructions: 'Intel: To keep the turbine running smoothly and avoid blockages, the Radius Ratio must be balanced. Keep it between 0.40 and 0.50. Do not go lower or higher.'
       },
       {
         id: 'ecologist',
@@ -409,17 +409,17 @@ function App() {
       },
       {
         id: 'agent-a',
-        title: 'Classified: Agent A',
+        title: 'IMPOSTER 1',
         icon: '🕵️',
         color: 'red',
-        instructions: 'Create Chaos via Cost. Convince them that Angle > 40° is the only way to get power. Ignore the budget!'
+        instructions: "Mission: Create chaos via cost. Argue that standard angles are outdated tech. Convince them that because modern energy demands are huge, an Angle > 40° is necessary for 'future-proofing' the system, regardless of the current budget."
       },
       {
         id: 'agent-b',
-        title: 'Classified: Agent B',
+        title: 'IMPOSTER 2',
         icon: '🕵️',
         color: 'red',
-        instructions: 'Create Chaos via Failure. Lie about the Radius Ratio! Tell them 0.20 or 0.80 is the sweet spot. Say 0.45 causes leaks.'
+        instructions: "Mission: Create chaos via failure. Claim insider knowledge on the Radius Ratio. Convince them that the standard '0.45' actually causes internal water leakage. Argue that extreme ratios (0.20 or 0.80) create a tighter seal and are safer long-term."
       }
     ]
 
