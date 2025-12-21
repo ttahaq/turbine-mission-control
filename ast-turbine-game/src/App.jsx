@@ -83,13 +83,29 @@ function App() {
       const results = calculateStats()
       setSimulationStats(results)
 
-      // GOD MODE OVERRIDE
+      // GOD MODE: Fair Judge (Winnable Mode)
       if (isGodMode) {
-        setTestResult({ status: 'success' })
+        const isAngleValid = angle >= 32 && angle <= 36
+        const isRadiusValid = radiusRatio >= 0.40 && radiusRatio <= 0.50
+        const isCostValid = results.cost < 6000
+
+        if (isAngleValid && isRadiusValid && isCostValid) {
+           // Force high efficiency for the "Win"
+           setSimulationStats({ ...results, efficiency: 94 }) 
+           setTestResult({ status: 'success' })
+        } else {
+           // Fail even in God Mode if values are wrong
+           let reason = 'Unknown Error'
+           if (!isAngleValid) reason = `Angle ${angle}° is outside optimal range (32°-36°)`
+           else if (!isRadiusValid) reason = `Radius Ratio ${radiusRatio.toFixed(2)} is unstable (Target: 0.45)`
+           else if (!isCostValid) reason = `Budget exceeded: $${results.cost.toLocaleString()}`
+           
+           setTestResult({ status: 'failure', reason })
+        }
         return
       }
 
-      // UNWINNABLE LOGIC: Always Fail
+      // UNWINNABLE LOGIC (God Mode OFF): Always Fail
       let reason = ''
       
       if (results.cost > 4000) {
@@ -299,11 +315,11 @@ function App() {
           <div className="bg-gray-800/30 p-6 border border-gray-700 rounded-xl">
             <div className="flex justify-between items-center mb-4">
               <label className="text-xl text-white font-bold">Radius Ratio</label>
-              <span className="text-2xl text-cyan-300">{radiusRatio.toFixed(1)}</span>
+              <span className="text-2xl text-cyan-300">{radiusRatio.toFixed(2)}</span>
             </div>
             <div className="flex items-center gap-4">
               <button 
-                onClick={() => setRadiusRatio(Math.max(0.1, Number((radiusRatio - 0.1).toFixed(1))))}
+                onClick={() => setRadiusRatio(Math.max(0.1, Number((radiusRatio - 0.05).toFixed(2))))}
                 className="w-16 h-16 flex items-center justify-center text-3xl border-2 border-cyan-500/50 rounded hover:bg-cyan-500/20 hover:border-cyan-400 transition-all"
               >
                 -
@@ -315,15 +331,15 @@ function App() {
                 />
               </div>
               <button 
-                onClick={() => setRadiusRatio(Math.min(0.8, Number((radiusRatio + 0.1).toFixed(1))))}
+                onClick={() => setRadiusRatio(Math.min(0.8, Number((radiusRatio + 0.05).toFixed(2))))}
                 className="w-16 h-16 flex items-center justify-center text-3xl border-2 border-cyan-500/50 rounded hover:bg-cyan-500/20 hover:border-cyan-400 transition-all"
               >
                 +
               </button>
             </div>
             <div className="flex justify-between text-xs text-gray-500 mt-2 font-sans">
-              <span>0.1</span>
-              <span>0.8</span>
+              <span>0.10</span>
+              <span>0.80</span>
             </div>
           </div>
 
