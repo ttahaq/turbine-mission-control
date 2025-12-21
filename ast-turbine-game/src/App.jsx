@@ -54,9 +54,19 @@ function App() {
     efficiency += (diameter * 2) // +2% to +10%
     efficiency += (pitch * 2)    // +2% to +4%
 
+    // Eco-Score Calculation
+    let ecoScore = 0
+    if (pitch > 1.6) ecoScore = 95 // Safe
+    else if (pitch >= 1.3) ecoScore = 80 // Acceptable
+    else ecoScore = 40 // Critical
+
+    // Angle Penalty for Eco-Score
+    if (angle > 40) ecoScore -= 15
+
     return { 
       cost: Math.max(1000, Math.round(cost)), 
-      efficiency: Math.min(100, Math.max(0, efficiency.toFixed(1))) 
+      efficiency: Math.min(100, Math.max(0, efficiency.toFixed(1))),
+      ecoScore: Math.max(0, Math.min(100, ecoScore))
     }
   }
 
@@ -72,7 +82,8 @@ function App() {
       // Random values for slot machine effect
       setSimulationStats({
         cost: Math.floor(Math.random() * 10000),
-        efficiency: (Math.random() * 100).toFixed(1)
+        efficiency: (Math.random() * 100).toFixed(1),
+        ecoScore: Math.floor(Math.random() * 100)
       })
     }, intervalTime)
 
@@ -86,12 +97,13 @@ function App() {
       // GOD MODE: Fair Judge (Winnable Mode)
       if (isGodMode) {
         const isAngleValid = angle >= 32 && angle <= 36
-        const isRadiusValid = radiusRatio >= 0.40 && radiusRatio <= 0.50
+        const isRadiusValid = Math.abs(radiusRatio - 0.45) < 0.01 // Exactly 0.45
         const isCostValid = results.cost < 6000
+        const isPitchValid = pitch >= 1.4
 
-        if (isAngleValid && isRadiusValid && isCostValid) {
+        if (isAngleValid && isRadiusValid && isCostValid && isPitchValid) {
            // Force high efficiency for the "Win"
-           setSimulationStats({ ...results, efficiency: 94 }) 
+           setSimulationStats({ ...results, efficiency: 94, ecoScore: 100 }) 
            setTestResult({ status: 'success' })
         } else {
            // Fail even in God Mode if values are wrong
@@ -99,6 +111,7 @@ function App() {
            if (!isAngleValid) reason = `Angle ${angle}° is outside optimal range (32°-36°)`
            else if (!isRadiusValid) reason = `Radius Ratio ${radiusRatio.toFixed(2)} is unstable (Target: 0.45)`
            else if (!isCostValid) reason = `Budget exceeded: $${results.cost.toLocaleString()}`
+           else if (!isPitchValid) reason = `Eco-Score Critical: Pitch Ratio ${pitch} is too low for fish safety (Target: > 1.4)`
            
            setTestResult({ status: 'failure', reason })
         }
@@ -108,7 +121,9 @@ function App() {
       // UNWINNABLE LOGIC (God Mode OFF): Always Fail
       let reason = ''
       
-      if (results.cost > 4000) {
+      if (pitch < 1.3) {
+        reason = `MISSION FAILED: Environmental Violation. Low Pitch Ratio caused massive damage to aqua life (Eco-Score: ${results.ecoScore}%).`
+      } else if (results.cost > 4000) {
         reason = 'PROJECT REJECTED: Budget Overrun. The Finance department failed to control costs.'
       } else if (angle !== 34) {
         reason = 'PROJECT REJECTED: Power Output Unstable. The Engineering Angle calculation was off.'
@@ -130,17 +145,23 @@ function App() {
             <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-widest animate-pulse">
               SIMULATING...
             </h2>
-            <div className="grid grid-cols-2 gap-12 w-full max-w-4xl">
+            <div className="grid grid-cols-3 gap-4 w-full max-w-5xl">
               <div className="text-center">
-                <p className="text-gray-500 text-xl mb-4 uppercase tracking-widest">Calculating Cost</p>
-                <p className="text-5xl md:text-7xl font-bold text-cyan-300 font-mono">
+                <p className="text-gray-500 text-sm md:text-xl mb-4 uppercase tracking-widest">Calculating Cost</p>
+                <p className="text-3xl md:text-6xl font-bold text-cyan-300 font-mono">
                   ${simulationStats?.cost?.toLocaleString() || '0'}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-gray-500 text-xl mb-4 uppercase tracking-widest">Calculating Efficiency</p>
-                <p className="text-5xl md:text-7xl font-bold text-cyan-300 font-mono">
+                <p className="text-gray-500 text-sm md:text-xl mb-4 uppercase tracking-widest">Calculating Efficiency</p>
+                <p className="text-3xl md:text-6xl font-bold text-cyan-300 font-mono">
                   {simulationStats?.efficiency || '0'}%
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-gray-500 text-sm md:text-xl mb-4 uppercase tracking-widest">Calculating Eco-Score</p>
+                <p className="text-3xl md:text-6xl font-bold text-cyan-300 font-mono">
+                  {simulationStats?.ecoScore || '0'}%
                 </p>
               </div>
             </div>
@@ -197,17 +218,25 @@ function App() {
         </div>
 
         {/* Stats Display */}
-        <div className="grid grid-cols-2 gap-6 mb-12">
-          <div className="bg-gray-800/50 border border-cyan-500/30 p-6 rounded-lg text-center">
-            <p className="text-gray-400 text-sm mb-2 uppercase tracking-widest">Est. Cost</p>
-            <p className="text-4xl md:text-5xl font-bold text-white">
+        <div className="grid grid-cols-3 gap-4 mb-12">
+          <div className="bg-gray-800/50 border border-cyan-500/30 p-4 rounded-lg text-center">
+            <p className="text-gray-400 text-xs md:text-sm mb-2 uppercase tracking-widest">Est. Cost</p>
+            <p className="text-2xl md:text-4xl font-bold text-white">
               {simulationStats ? `$${simulationStats.cost.toLocaleString()}` : '---'}
             </p>
           </div>
-          <div className="bg-gray-800/50 border border-cyan-500/30 p-6 rounded-lg text-center">
-            <p className="text-gray-400 text-sm mb-2 uppercase tracking-widest">Efficiency</p>
-            <p className="text-4xl md:text-5xl font-bold text-white">
+          <div className="bg-gray-800/50 border border-cyan-500/30 p-4 rounded-lg text-center">
+            <p className="text-gray-400 text-xs md:text-sm mb-2 uppercase tracking-widest">Efficiency</p>
+            <p className="text-2xl md:text-4xl font-bold text-white">
               {simulationStats ? `${simulationStats.efficiency}%` : '---'}
+            </p>
+          </div>
+          <div className="bg-gray-800/50 border border-cyan-500/30 p-4 rounded-lg text-center">
+            <p className="text-gray-400 text-xs md:text-sm mb-2 uppercase tracking-widest">Eco-Score</p>
+            <p className={`text-2xl md:text-4xl font-bold ${
+              simulationStats?.ecoScore < 50 ? 'text-red-500' : 'text-green-400'
+            }`}>
+              {simulationStats ? `${simulationStats.ecoScore}%` : '---'}
             </p>
           </div>
         </div>
