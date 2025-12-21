@@ -12,6 +12,18 @@ function App() {
   const [testResult, setTestResult] = useState(null)
   const [simulationStats, setSimulationStats] = useState(null)
   const [isSimulating, setIsSimulating] = useState(false)
+  const [isGodMode, setIsGodMode] = useState(false)
+
+  // God Mode Toggle
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'x') {
+        setIsGodMode(prev => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   // Reset stats when parameters change
   useEffect(() => {
@@ -70,6 +82,12 @@ function App() {
       
       const results = calculateStats()
       setSimulationStats(results)
+
+      // GOD MODE OVERRIDE
+      if (isGodMode) {
+        setTestResult({ status: 'success' })
+        return
+      }
 
       // UNWINNABLE LOGIC: Always Fail
       let reason = ''
@@ -142,7 +160,10 @@ function App() {
 
         {/* Top Bar */}
         <div className="flex justify-between items-center mb-8 border-b border-cyan-500/30 pb-4">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tighter">LAUNCH CONTROL</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tighter">LAUNCH CONTROL</h1>
+            <div className={`w-1 h-1 rounded-full transition-colors duration-300 ${isGodMode ? 'bg-green-500/50' : 'bg-transparent'}`} />
+          </div>
           <div className="flex gap-4">
             <button 
               onClick={handleTest}
@@ -342,11 +363,18 @@ function App() {
         instructions: 'Intel: Fish need space. Push for a large Pitch Ratio (above 1.5) to ensure safe passage.'
       },
       {
-        id: 'saboteur',
-        title: 'HIDDEN AGENDA',
-        icon: '🎭',
+        id: 'agent-a',
+        title: 'Classified: Agent A',
+        icon: '🕵️',
         color: 'red',
-        instructions: 'Mission: Mislead them. Suggest extreme values! Tell them Angles above 40° give 2x power, or that Radius Ratio < 0.2 cleans itself. Be convincing!'
+        instructions: 'Create Chaos via Cost. Convince them that Angle > 40° is the only way to get power. Ignore the budget!'
+      },
+      {
+        id: 'agent-b',
+        title: 'Classified: Agent B',
+        icon: '🕵️',
+        color: 'red',
+        instructions: 'Create Chaos via Failure. Lie about the Radius Ratio! Tell them 0.20 or 0.80 is the sweet spot. Say 0.45 causes leaks.'
       }
     ]
 
