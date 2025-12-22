@@ -168,23 +168,25 @@ function App() {
         {/* Result Modal */}
         {testResult && (
           <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in">
-            <div className="max-w-5xl w-full p-12 border-4 border-red-600 bg-red-950/90 text-center shadow-[0_0_100px_rgba(220,38,38,0.5)]">
-              <h2 className="text-7xl md:text-9xl font-black mb-8 tracking-tighter text-red-500 animate-pulse">
-                MISSION FAILED
+            <div className={`max-w-5xl w-full p-12 border-4 ${testResult.status === 'success' ? 'border-green-600 bg-green-950/90 shadow-[0_0_100px_rgba(34,197,94,0.5)]' : 'border-red-600 bg-red-950/90 shadow-[0_0_100px_rgba(220,38,38,0.5)]'} text-center`}>
+              <h2 className={`text-7xl md:text-9xl font-black mb-8 tracking-tighter ${testResult.status === 'success' ? 'text-green-500' : 'text-red-500'} animate-pulse`}>
+                {testResult.status === 'success' ? 'MISSION SUCCESS' : 'MISSION FAILED'}
               </h2>
               
-              <div className="bg-black/40 p-8 rounded-xl border border-red-500/30 mb-12">
-                <p className="text-3xl md:text-5xl font-bold text-red-200 mb-6 leading-tight">
+              <div className={`bg-black/40 p-8 rounded-xl border ${testResult.status === 'success' ? 'border-green-500/30' : 'border-red-500/30'} mb-12`}>
+                <p className={`text-3xl md:text-5xl font-bold ${testResult.status === 'success' ? 'text-green-200' : 'text-red-200'} mb-6 leading-tight`}>
                   {testResult.reason}
                 </p>
-                <p className="text-xl md:text-2xl text-red-400 uppercase tracking-[0.2em] font-bold animate-bounce">
-                  Sabotage Detected or Incompetence? Who is responsible?
-                </p>
+                {testResult.status === 'failure' && (
+                  <p className="text-xl md:text-2xl text-red-400 uppercase tracking-[0.2em] font-bold animate-bounce">
+                    Sabotage Detected or Incompetence? Who is responsible?
+                  </p>
+                )}
               </div>
 
               <button 
                 onClick={() => setTestResult(null)}
-                className="px-16 py-6 text-3xl font-black border-4 border-red-500 text-red-500 hover:bg-red-600 hover:text-white transition-all hover:scale-105 uppercase tracking-widest"
+                className={`px-16 py-6 text-3xl font-black border-4 ${testResult.status === 'success' ? 'border-green-500 text-green-500 hover:bg-green-600' : 'border-red-500 text-red-500 hover:bg-red-600'} hover:text-white transition-all hover:scale-105 uppercase tracking-widest`}
               >
                 BEGIN DEBRIEF
               </button>
