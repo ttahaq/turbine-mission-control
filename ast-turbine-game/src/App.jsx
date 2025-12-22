@@ -90,36 +90,45 @@ function App() {
     setTimeout(() => {
       clearInterval(intervalId)
       setIsSimulating(false)
-      
-      const results = calculateStats()
-      setSimulationStats(results)
 
-      // GOD MODE: ABSOLUTE OVERRIDE (Win Button)
+      // ---------------------------------------------------------
+      // 1. GOD MODE CHECK (MUTLAK GALİBİYET)
+      // ---------------------------------------------------------
       if (isGodMode) {
-         // Force perfect stats for display
-         setSimulationStats({ 
-           ...results, 
-           efficiency: 94, 
-           ecoScore: 100 
-         }) 
-         setTestResult({ status: 'success' })
-         return
+        // Hesaplama yapma. Sadece kazan.
+        setSimulationStats({
+          efficiency: 94,
+          cost: 4600,
+          ecoScore: 100
+        });
+        setTestResult({ 
+          status: 'success',
+          reason: "TURBINE STABILIZED. OUTPUT OPTIMAL." 
+        });
+        return; // FONKSİYONU BURADA KES. AŞAĞIYA İNME.
       }
 
-      // UNWINNABLE LOGIC (God Mode OFF): Always Fail
-      let reason = ''
-      
-      if (pitch < 1.3) {
-        reason = `MISSION FAILED: Environmental Violation. Low Pitch Ratio caused massive damage to aqua life (Eco-Score: ${results.ecoScore}%).`
-      } else if (results.cost > 4000) {
-        reason = 'PROJECT REJECTED: Budget Overrun. The Finance department failed to control costs.'
-      } else if (angle !== 34) {
-        reason = 'PROJECT REJECTED: Power Output Unstable. The Engineering Angle calculation was off.'
-      } else {
-        reason = 'CRITICAL FAILURE: Unexpected debris blockage. Radius Ratio was not resilient enough.'
-      }
+      // ---------------------------------------------------------
+      // 2. IMPOSSIBLE MODE (GOD MODE KAPALIYSA HER TÜRLÜ HATA VER)
+      // ---------------------------------------------------------
+      const randomFailures = [
+         "PROJECT HALTED: Environmental Impact Assessment failed. Eco-Score is too low.",
+         "CRITICAL FAILURE: Budget Exceeded. The Diameter is too large.",
+         "FAIL: Unexpected hydraulic resistance detected in the screw mechanism.",
+         "MISSION FAILED: Environmental Regulations Violation. Low Pitch Ratio caused massive damage."
+      ];
+      // Rastgele bir hata seç
+      const randomMsg = randomFailures[Math.floor(Math.random() * randomFailures.length)];
 
-      setTestResult({ status: 'failure', reason })
+      setSimulationStats({
+        efficiency: 64,
+        cost: 5200,
+        ecoScore: 45
+      });
+      setTestResult({
+        status: 'failure', // HATA
+        reason: randomMsg
+      });
     }, duration)
   }
 
