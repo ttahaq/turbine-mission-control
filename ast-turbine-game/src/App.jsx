@@ -94,34 +94,16 @@ function App() {
       const results = calculateStats()
       setSimulationStats(results)
 
-      // GOD MODE: Fair Judge (Winnable Mode)
+      // GOD MODE: ABSOLUTE OVERRIDE (Win Button)
       if (isGodMode) {
-        // Safety Net: Boost score if slightly low
-        if (results.ecoScore > 50 && results.ecoScore < 65) {
-          results.ecoScore = 65
-          setSimulationStats({ ...results })
-        }
-
-        const isAngleValid = angle >= 32 && angle <= 36
-        const isRadiusValid = Math.abs(radiusRatio - 0.45) < 0.01 // Exactly 0.45
-        const isCostValid = results.cost < 6000
-        const isEcoValid = results.ecoScore > 60
-
-        if (isAngleValid && isRadiusValid && isCostValid && isEcoValid) {
-           // Force high efficiency for the "Win"
-           setSimulationStats({ ...results, efficiency: 94, ecoScore: 100 }) 
-           setTestResult({ status: 'success' })
-        } else {
-           // Fail even in God Mode if values are wrong
-           let reason = 'Unknown Error'
-           if (!isAngleValid) reason = `Angle ${angle}° is outside optimal range (32°-36°)`
-           else if (!isRadiusValid) reason = `Radius Ratio ${radiusRatio.toFixed(2)} is unstable (Target: 0.45)`
-           else if (!isCostValid) reason = `Budget exceeded: $${results.cost.toLocaleString()}`
-           else if (!isEcoValid) reason = `Eco-Score Critical: ${results.ecoScore}% is too low for fish safety (Target: > 60%)`
-           
-           setTestResult({ status: 'failure', reason })
-        }
-        return
+         // Force perfect stats for display
+         setSimulationStats({ 
+           ...results, 
+           efficiency: 94, 
+           ecoScore: 100 
+         }) 
+         setTestResult({ status: 'success' })
+         return
       }
 
       // UNWINNABLE LOGIC (God Mode OFF): Always Fail
