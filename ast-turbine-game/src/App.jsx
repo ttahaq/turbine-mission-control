@@ -55,10 +55,10 @@ function App() {
     efficiency += (pitch * 2)    // +2% to +4%
 
     // Eco-Score Calculation
-    let ecoScore = 0
-    if (pitch > 1.6) ecoScore = 95 // Safe
-    else if (pitch >= 1.3) ecoScore = 80 // Acceptable
-    else ecoScore = 40 // Critical
+    // Base 65 at Pitch 1.5.
+    // Pitch 1.3 -> 53 (Acceptable with God Mode boost).
+    // Pitch 1.2 -> 47 (Critical).
+    let ecoScore = 65 + (pitch - 1.5) * 60
 
     // Angle Penalty for Eco-Score
     if (angle > 40) ecoScore -= 15
@@ -66,7 +66,7 @@ function App() {
     return { 
       cost: Math.max(1000, Math.round(cost)), 
       efficiency: Math.min(100, Math.max(0, efficiency.toFixed(1))),
-      ecoScore: Math.max(0, Math.min(100, ecoScore))
+      ecoScore: Math.max(0, Math.min(100, Math.round(ecoScore)))
     }
   }
 
@@ -96,12 +96,18 @@ function App() {
 
       // GOD MODE: Fair Judge (Winnable Mode)
       if (isGodMode) {
+        // Safety Net: Boost score if slightly low
+        if (results.ecoScore > 50 && results.ecoScore < 65) {
+          results.ecoScore = 65
+          setSimulationStats({ ...results })
+        }
+
         const isAngleValid = angle >= 32 && angle <= 36
         const isRadiusValid = Math.abs(radiusRatio - 0.45) < 0.01 // Exactly 0.45
         const isCostValid = results.cost < 6000
-        const isPitchValid = pitch >= 1.4
+        const isEcoValid = results.ecoScore > 60
 
-        if (isAngleValid && isRadiusValid && isCostValid && isPitchValid) {
+        if (isAngleValid && isRadiusValid && isCostValid && isEcoValid) {
            // Force high efficiency for the "Win"
            setSimulationStats({ ...results, efficiency: 94, ecoScore: 100 }) 
            setTestResult({ status: 'success' })
@@ -111,7 +117,7 @@ function App() {
            if (!isAngleValid) reason = `Angle ${angle}° is outside optimal range (32°-36°)`
            else if (!isRadiusValid) reason = `Radius Ratio ${radiusRatio.toFixed(2)} is unstable (Target: 0.45)`
            else if (!isCostValid) reason = `Budget exceeded: $${results.cost.toLocaleString()}`
-           else if (!isPitchValid) reason = `Eco-Score Critical: Pitch Ratio ${pitch} is too low for fish safety (Target: > 1.4)`
+           else if (!isEcoValid) reason = `Eco-Score Critical: ${results.ecoScore}% is too low for fish safety (Target: > 60%)`
            
            setTestResult({ status: 'failure', reason })
         }
