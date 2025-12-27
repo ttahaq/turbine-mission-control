@@ -19,15 +19,15 @@ Achieving all three simultaneously is mathematically difficult, forcing the grou
 
 **1. Mission Control (Landing Page)**
 *The entry point where the Host (Presenter) and Crew (Audience) select their interfaces.*
-![Landing Page](screenshots/landing.png)
+![Landing Page](images/landing.png)
 
 **2. The Host Dashboard (Project Lead View)**
 *Real-time visualization where the presenter adjusts parameters. Notice the "Eco-Score" and "Efficiency" metrics reacting instantly.*
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](images/dashboard.png)
 
 **3. The Field Manual (Mobile/Student View)**
 *The secret interface for audience members. This is where they receive their conflicting roles (Engineer, Ecologist, etc.) to debate against the host.*
-![Mobile Role Selection](screenshots/mobile.png)
+![Mobile Role Selection](images/mobile.png)
 
 ##  Features
 
