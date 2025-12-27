@@ -38,14 +38,13 @@ Achieving all three simultaneously is mathematically difficult, forcing the grou
 * **Real-Time Feedback:** Instant calculation of "Eco-Score", "Efficiency", and "Estimated Cost" based on 4 adjustable parameters.
 * **"God Mode" Mechanic:** A hidden developer override key ,which is X, to force a successful outcome during the final presentation, regardless of the mathematical inputs (Presentation Fail-Safe).
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 * **Frontend:** React (Vite)
 * **Styling:** CSS3 (Custom Dark/Neon UI)
-* **Deployment:** Vercel
 * **Logic:** Custom algorithm for hydraulic efficiency and ecological impact scoring.
 
-## 🎲 The Roles
+##  The Roles
 
 1.  **Chief Engineer:** Pushes for steep angles (34°) to maximize power output.
 2.  **Financial Officer:** Pushes for smaller diameters and cheaper materials to save budget.
